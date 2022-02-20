@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      serviceAccountName: podkicker
+      containers:
+        - name: podkicker
+          image: ghcr.io/benc-uk/pod-kicker
+          resources:
+            limits:
+              memory: "50Mi"
+              cpu: "50m"
+          env:
+            - name: PODKICKER_WATCH_DIR
+              value: "/stuff"
+            - name: PODKICKER_TARGET_NAME
+              value: "demo"
+          volumeMounts:
+            - mountPath: /stuff
+              name: stuff-volume
+
+        - name: nginx
+          image: nginx
+          resources:
+            limits:
+              memory: "200Mi"
+              cpu: "200m"
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /stuff
+              name: stuff-volume
+
+      volumes:
+        - name: stuff-volume
+          emptyDir: {}
