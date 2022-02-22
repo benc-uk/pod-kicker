@@ -1,58 +1,16 @@
 # Pod Kicker
 
-Purpose and description of this project
-
-Goals:
-
-- Make a thing
-- Do a thing
-
-Use cases & key features:
-
-- Something
-- Something else
-
-Supporting technologies and libraries:
-
-- Stuff
-- Things
-
-<!-- Note! Change benc-uk/project-starter for the real repo!! -->
-<!-- See https://shields.io/ for more -->
-
-![](https://img.shields.io/github/license/benc-uk/project-starter)
-![](https://img.shields.io/github/last-commit/benc-uk/project-starter)
-![](https://img.shields.io/github/release/benc-uk/project-starter)
-![](https://img.shields.io/github/checks-status/benc-uk/project-starter/main)
-![](https://img.shields.io/github/workflow/status/benc-uk/project-starter/CI%20Build?label=ci-build)
-![](https://img.shields.io/github/workflow/status/benc-uk/project-starter/Release%20Assets?label=release)
-
-# Table Of Contents
-
-Optional. Remove TOC for smaller projects
+This is small proof of concept of a component to restart
 
 # Getting Started
 
 ## Installing / Deploying
 
-- If the project can be installed (such as a command line tool or library)
-- Or deployed to Kubernetes, public cloud etc
-
-## Running as container
-
-Notes on running the project from Docker image / container
+See [examples in deploy directory](./deploy/) for how to add the podkicker sidecar to any pod, and the service account needed.
 
 ## Running locally
 
-Notes on running the project locally, including pre-reqs
-
-# Architecture
-
-Optional. Diagram or description of the overall system architecture, only where applicable.
-
-# Screenshots
-
-Optional. Screenshots can help convey what the project looks like when running and what it's purpose and use is.
+The code only works running inside a pod in Kubernetes
 
 # Configuration
 
@@ -61,51 +19,25 @@ Details of any configuration files, environmental variables, command line parame
 For services
 | Setting / Variable | Purpose | Default |
 | ------------------ | ------------------------------------------- | ------- |
-| PORT | Port the server will listen on. | 8000 |
-| SOMETHING | Some very important setting. **_Required_** | _None_ |
-| SOMETHING_ELSE | Some less important setting | "foo" |
-
-Example for CLI tools
-
-```bash
-./foo-tool --help
-
-Options:
-  -p, --preset <presetName>       Skip prompts and use saved or remote preset
-  -d, --default                   Skip prompts and use default preset
-```
+| PODKICKER_WATCH | What file or directory to watch for changes, when a directory is added all files and sub-directories under it are watched recursively. **_Required_** | _None_ |
+| PODKICKER_TARGET_NAME | The name of the Kubernetes deployment or stateful set to be restarted. Typically this is the same one as the sidecar is running under. **_Required_** | _None_ |
+| PODKICKER_TARGET_TYPE | Either "deployment" or "statefulset" | "deployment" |
 
 # Repository Structure
 
 A brief description of the top-level directories of this project is as follows:
 
 ```c
-/api        - Details of the API specification & docs
 /build      - Build configuration e.g. Dockerfiles
-/charts     - Helm charts
 /deploy     - Deployment and infrastructure as code, inc Kubernetes
-/scripts    - Bash and other supporting scripts
-/src        - Source code
-/test       - Testing, mock data and API + load tests
+/cmd        - Source code
 ```
-
-# API
-
-See the [API documentation](./api/) for full infomration about the API(s).  
-Optional. Delete this section if project as no API.
 
 # Known Issues
 
-List any known bugs or gotchas.
-
-# Change Log
-
-See [complete change log](./CHANGELOG.md)
+All file operations will trigger the restart, there is no filter yet
 
 # License
 
 This project uses the MIT software license. See [full license file](./LICENSE)
 
-# Acknowledgements
-
-Optional. Put acknowledgements and credits here, if any

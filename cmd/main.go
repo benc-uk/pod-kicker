@@ -26,9 +26,9 @@ var (
 func main() {
 	log.Printf("### 🚀 PodKicker %s starting...", version)
 
-	watchDir := os.Getenv("PODKICKER_WATCH_DIR")
-	if watchDir == "" {
-		log.Fatalln("### 💥 Env var PODKICKER_WATCH_DIR was not set")
+	watchFsTarget := os.Getenv("PODKICKER_WATCH")
+	if watchFsTarget == "" {
+		log.Fatalln("### 💥 Env var PODKICKER_WATCH was not set")
 	}
 	targetName := os.Getenv("PODKICKER_TARGET_NAME")
 	if targetName == "" {
@@ -72,6 +72,7 @@ func main() {
 
 				log.Printf("### ⛔ Detected file change: %v", event)
 
+				// This patch is exactly how the `kubectl rollout restart` command works
 				patchData := fmt.Sprintf(`{"spec":{"template":{"metadata":{"annotations":{"kubectl.kubernetes.io/restartedAt":"%s"}}}}}`, time.Now().Format(time.RFC3339))
 
 				var err error
@@ -95,12 +96,12 @@ func main() {
 		}
 	}()
 
-	// Watch this folder for changes.
-	if err := fileWatcher.AddRecursive(watchDir); err != nil {
+	// Watch this folder or file for changes
+	if err := fileWatcher.AddRecursive(watchFsTarget); err != nil {
 		log.Fatalln(err)
 	}
 
-	log.Printf("### 👀 Watching directory '%s' ...", watchDir)
+	log.Printf("### 👀 Watching '%s' for changes...", watchFsTarget)
 
 	// Start the watching process - it'll check for changes every 200ms.
 	if err := fileWatcher.Start(time.Millisecond * 200); err != nil {

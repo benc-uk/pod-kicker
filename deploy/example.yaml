@@ -21,7 +21,7 @@ spec:
               memory: "50Mi"
               cpu: "50m"
           env:
-            - name: PODKICKER_WATCH_DIR
+            - name: PODKICKER_WATCH
               value: "/stuff"
             - name: PODKICKER_TARGET_NAME
               value: "demo"
